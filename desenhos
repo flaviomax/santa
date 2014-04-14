@@ -1,3 +1,43 @@
+
+void drawElves(int startLine, int numberElves ) {
+    vector<string> elf[8];
+    
+    if ( numberElves > 0 ) {
+        elf[0] = canvas[startLine] =   string("      ___,@   ");
+        elf[1] = canvas[startLine+1] = string("     /  <     ");
+        elf[2] = canvas[startLine+2] = string(" _  /    \\  _ "); 
+        elf[3] = canvas[startLine+3] = string(" \\`/______\\´/ "); 
+        elf[4] = canvas[startLine+4] = string(" |; (e  e) ;| ");
+        elf[5] = canvas[startLine+5] = string(" \\/\\   7  /\\/ ");   
+        elf[6] = canvas[startLine+6] = string("    \\'=='/    ");
+        elf[7] = canvas[startLine+7] = string("     \\__/     ");    
+
+
+        for ( n = 1; n < numberElves; n++) {
+            for ( i = 0; i < 8; i++)
+                canvas[startLine+i] += elf[i];   
+
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		    -""", 
 		  /____, \
 		 {_____}`{}
