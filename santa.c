@@ -93,6 +93,7 @@ void drawElves(int startLine, int numberElves ) {
     }
 }
 
+
 void drawSantaClausAndStringWithSizeOfElvesQueue(int startLine, bool isSantaWake, int queueSize){
   if (isSantaWake){
     canvas[startLine]  = string("");
@@ -128,6 +129,7 @@ void drawSantaClausAndStringWithSizeOfElvesQueue(int startLine, bool isSantaWake
    
 }
 
+
 void drawSystem(){
 	system("clear");
 	map<string, int> systemStatus = getSystemStatus();
@@ -139,6 +141,8 @@ void drawSystem(){
 	for(int i=0; i < canvas.size(); ++i)
 		cout << canvas[i] << endl;
 	
+	sleep(1);
+
 }
 
 
@@ -150,7 +154,7 @@ void prepareSleigh(){
 
 void helpElves(){
 // 	printf("Vou ajudar meus elfos!\n\n\n\n");
-	this_thread::sleep_for(  chrono::milliseconds( 2000 ) );
+	this_thread::sleep_for(  chrono::milliseconds( 1000 ) );
 }
 
 
@@ -159,8 +163,10 @@ void santa_t (){
 		sem_wait (&santaSem);
 		pthread_mutex_lock(&contLock);
 		isSantaSleeping = false;
+		
+		
+		
 		 drawSystem();		/*DRAW CALL !!!!!!!!!*/
-		sleep(1);
 		if (raindeer == MAX_RAINDEER){
 			int i;
 			prepareSleigh();
@@ -178,6 +184,8 @@ void santa_t (){
 		
 		
 		isSantaSleeping = true;
+		drawSystem();		/*DRAW CALL !!!!!!!!!*/
+		
 		pthread_mutex_unlock(&contLock);
 
 	}
@@ -196,7 +204,6 @@ void raindeer_t (int id){
 
 	raindeer++;
 	 drawSystem();		/*DRAW CALL !!!!!!!!!*/
-	 sleep(1);
 
 	if (raindeer == MAX_RAINDEER)
 		sem_post (&santaSem);
@@ -208,7 +215,7 @@ void raindeer_t (int id){
 }
 
 void getHelp(int id){
-  this_thread::sleep_for(  chrono::milliseconds( 2000 ) );
+  this_thread::sleep_for(  chrono::milliseconds( 1000 ) );
 }
 
 void elf_t (int id){
@@ -216,7 +223,6 @@ void elf_t (int id){
 	pthread_mutex_lock(&contLock);
 	++elvesCreated;
 	drawSystem();
-	sleep(1);
 	  pthread_mutex_unlock(&contLock);
 
 	while(true){
@@ -238,7 +244,6 @@ void elf_t (int id){
 	  pthread_mutex_lock(&contLock);
 	  elves--;
 	  drawSystem();		/*DRAW CALL !!!!!!!!!*/
-	  sleep(1);
 	  if (elves == 0)
 		  pthread_mutex_unlock(&elfTex);
 	  pthread_mutex_unlock(&contLock);
