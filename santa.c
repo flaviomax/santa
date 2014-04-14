@@ -21,11 +21,14 @@ void *santa_t (void *v){
 		if (raindeer == MAX_RAINDEER){
 			int i;
 			//prepareSleigh();
+			printf("Todas as renas chegaram! Papai vai acorda-las\n");
 			for (i = 0; i < MAX_RAINDEER; i++)
 				sem_post(&raindeerSem);
 		}
-		else if (elves == MAX_ELVES)
+		else if (elves == MAX_ELVES){
 			//helpElves();
+			printf("Vou ajudar meus elfos!\n");
+		}
 		pthread_mutex_unlock(&contLock);
 	}
 }
@@ -33,6 +36,7 @@ void *santa_t (void *v){
 void *raindeer_t (void *v){
 	pthread_mutex_lock(&contLock);
 	raindeer++;
+	printf("Chegou a rena %d/n", raindeer);
 	if (raindeer == MAX_RAINDEER)
 		sem_post (&santaSem);
 	pthread_mutex_unlock(&contLock);
@@ -45,6 +49,7 @@ void *elf_t (void *v){
 	pthread_mutex_lock(&elfTex);
 	pthread_mutex_lock(&contLock);
 	elves++;
+	printf("Chegou o elfo %d\n", elves);
 	if (elves == MAX_ELVES)
 		sem_post(&santaSem);
 	else
@@ -63,7 +68,6 @@ void *elf_t (void *v){
 int main(){
 	sem_init(&santaSem, 0, 0);
 	sem_init(&raindeerSem, 0 ,0);
-
 
 	return 0;
 }
