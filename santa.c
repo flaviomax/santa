@@ -1,3 +1,4 @@
+
 /** Primeira solução ao problema do Papai Noel */
 #include <pthread.h>
 #include <semaphore.h>
@@ -16,29 +17,40 @@ volatile int elves = 0, raindeer = 0, santaDeparted = 0;
 sem_t santaSem, raindeerSem;
 pthread_mutex_t elfTex = PTHREAD_MUTEX_INITIALIZER, contLock = PTHREAD_MUTEX_INITIALIZER;
 
+void prepareSleigh(){
+	printf("Todas as renas chegaram! Papai vai acorda-las\n");
+	this_thread::sleep_for(  chrono::milliseconds( 500 ) );
+}
+
+void	helpElves(){
+	printf("Vou ajudar meus elfos!\n");
+	this_thread::sleep_for(  chrono::milliseconds( 200 ) );
+}
+
+
 void santa_t (){
 	while(santaDeparted == 0){
 		sem_wait (&santaSem);
 		pthread_mutex_lock(&contLock);
 		if (raindeer == MAX_RAINDEER){
 			int i;
-			//prepareSleigh();
-			printf("Todas as renas chegaram! Papai vai acorda-las\n");
+			prepareSleigh();
 			for (i = 0; i < MAX_RAINDEER; i++)
 				sem_post(&raindeerSem);
 		}
 		else if (elves == MAX_ELVES){
-			//helpElves();
-			printf("Vou ajudar meus elfos!\n");
+			helpElves();
 		}
 		pthread_mutex_unlock(&contLock);
 	}
 }
 
+
+
 void raindeer_t (int id){
 	pthread_mutex_lock(&contLock);
 	raindeer++;
-	printf("Chegou a rena %d/n", raindeer);
+	printf("Chegou a rena %d\ n", raindeer);
 	if (raindeer == MAX_RAINDEER)
 		sem_post (&santaSem);
 	pthread_mutex_unlock(&contLock);
@@ -72,17 +84,18 @@ int main(){
 	sem_init(&santaSem, 0, 0);
 
 	vector<thread*> threadsVector;
-	
+
 	threadsVector.push_back( new thread(santa_t) );
-	
+
 	for(int i=1; i <= MAX_RAINDEER; ++i)
 		threadsVector.push_back( new thread(raindeer_t,i) );
-	
+
 	for(int i=1; i <= MAX_ELVES; ++i)
 		threadsVector.push_back( new thread(elf_t,i) );
-	
+
 	for(int i=0; i < threadsVector.size(); ++i)
 		threadsVector[i]->join();
-	
+
 	return 0;
 }
+
