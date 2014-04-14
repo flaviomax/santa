@@ -159,9 +159,10 @@ void helpElves(){
 void santa_t (){
 	while(!santaDeparted){
 		sem_wait (&santaSem);
+		isSantaSleeping = false;
+		pthread_mutex_lock(&contLock);
 		 drawSystem();		/*DRAW CALL !!!!!!!!!*/
 		sleep(1);
-		pthread_mutex_lock(&contLock);
 		if (raindeer == MAX_RAINDEER){
 			int i;
 			prepareSleigh();
@@ -174,6 +175,8 @@ void santa_t (){
 			helpElves();
 		}
 		
+		
+		isSantaSleeping = true;
 		pthread_mutex_unlock(&contLock);
 
 	}
