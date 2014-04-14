@@ -1,6 +1,17 @@
+#include <string>
+#include <iostream>
+#include <vector>
+#include <sstream>
+using namespace std;
+
+
+vector<string> canvas;
+
+
+
 
 void drawElves(int startLine, int numberElves ) {
-    vector<string> elf[8];
+    vector<string> elf(8);
     
     if ( numberElves > 0 ) {
         elf[0] = canvas[startLine] =   string("      ___,@   ");
@@ -13,12 +24,85 @@ void drawElves(int startLine, int numberElves ) {
         elf[7] = canvas[startLine+7] = string("     \\__/     ");    
 
 
-        for ( n = 1; n < numberElves; n++) {
-            for ( i = 0; i < 8; i++)
+        for (int n = 1; n < numberElves; n++) {
+            for (int  i = 0; i < 8; i++)
                 canvas[startLine+i] += elf[i];   
 
         }
     }
+}
+
+
+map<string, int> getSystemStatus(){
+  map m;
+  
+   m["isSantaSleeping"] = isSantaSleeping;
+   pthread_mutex_lock(&contLock);
+    m["elvesWaiting"] = elves;
+  m["elvesOnQueue"] = MAX_ELVES - elves;
+ 	pthread_mutex_unlock(&contLock);
+
+  
+  return m;
+}
+
+
+void drawSantaClausAndStringWithSizeOfElvesQueue(int startLine, bool isSantaWake, int queueSize){
+  
+
+  if (isSantaWake){
+    canvas[startLine]  = string("");
+    canvas[startLine+1]  = string("    -\"\"\", ");
+    canvas[startLine+2]  = string("   /____, \\");
+    canvas[startLine+3]  = string("   {_____}`{}");
+    canvas[startLine+4]  = string("  (/ O O \\)");
+    canvas[startLine+5]  = string("  {`-=^=-`}");
+    canvas[startLine+6]  = string("  {   u   }");
+    canvas[startLine+7]  = string("   {     }");
+    canvas[startLine+7]  = string("    `-,-`");
+  }
+  else{
+    canvas[startLine]  = string("");
+    canvas[startLine+1]  = string("    -\"\"\", ");
+    canvas[startLine+2]  = string("   /____, \\");
+    canvas[startLine+3]  = string("   {_____}`{}");
+    canvas[startLine+4]  = string("  (/ - - \\)   Z");
+    canvas[startLine+5]  = string("  {`-=^=-`}  z");
+    canvas[startLine+6]  = string("  {   -   }Z");
+    canvas[startLine+7]  = string("   {     }");
+    canvas[startLine+7]  = string("    `-,-`");
+  }
+  
+    stringstream ss;
+    ss << queueSize ;
+    string aux;
+    ss >> aux;
+    
+    canvas[startLine+3]  += string("			DUENDES NA FILA");
+    canvas[startLine+4]  += string("				") +  aux;
+  
+   
+}
+
+void draw(){
+  
+  
+  drawSantaClausAndStringWithSizeOfElvesQueue(0,true,20);
+  drawElves(10,4);
+  
+   for(int i=0; i < canvas.size(); ++i){
+    cout << canvas[i] << endl;
+  }
+}
+
+
+
+int main(){
+
+  canvas.resize(50);
+  drawSantaClausAndStringWithSizeOfElvesQueue(2, !true,5);
+  
+  return 0;
 }
 
 
