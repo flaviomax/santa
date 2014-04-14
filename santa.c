@@ -14,34 +14,34 @@ sem_t santaSem, raindeerSem;
 pthread_mutex_t elfTex = PTHREAD_MUTEX_INITIALIZER, contLock = PTHREAD_MUTEX_INITIALIZER;
 
 
-void *santa (void *v){
+void *santa_t (void *v){
 	while(santaDeparted == 0){
 		sem_wait (&santaSem);
 		pthread_mutex_lock(&contLock);
 		if (raindeer == MAX_RAINDEER){
 			int i;
-			prepareSleigh();
+			//prepareSleigh();
 			for (i = 0; i < MAX_RAINDEER; i++)
-				sem_post(&raindeer_sem);
+				sem_post(&raindeerSem);
 		}
 		else if (elves == MAX_ELVES)
-			helpElves();
+			//helpElves();
 		pthread_mutex_unlock(&contLock);
 	}
 }
 
-void *raindeer (void *v){
+void *raindeer_t (void *v){
 	pthread_mutex_lock(&contLock);
 	raindeer++;
 	if (raindeer == MAX_RAINDEER)
 		sem_post (&santaSem);
 	pthread_mutex_unlock(&contLock);
 	
-	sem_wait(&raindeer_sem);
-	getHitched();	
+	sem_wait(&raindeerSem);
+	//getHitched();	
 }
 
-void *elf (void *v){
+void *elf_t (void *v){
 	pthread_mutex_lock(&elfTex);
 	pthread_mutex_lock(&contLock);
 	elves++;
@@ -51,11 +51,19 @@ void *elf (void *v){
 		pthread_mutex_unlock(&elfTex);
 	pthread_mutex_unlock(&contLock);
 	
-	getHelp();
+	//getHelp();
 	
 	pthread_mutex_lock(&contLock);
 	elves--;
 	if (elves == 0)
-		sem_post(&elfTex);
+		pthread_mutex_unlock(&elfTex);
 	pthread_mutex_unlock(&contLock);
+}
+
+int main(){
+	sem_init(&santaSem, 0, 0);
+	sem_init(&raindeerSem, 0 ,0);
+
+
+	return 0;
 }
