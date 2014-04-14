@@ -13,9 +13,9 @@ using namespace std;
 const int MAX_RAINDEER = 9;
 const int MAX_SIMULTANEOUS_ELVES = 3; /* Max number of elves that can get help simultaneously */
 const int MAX_ELVES = 10;  /* Max number of elves that can get help simultaneously */
-bool isSantaSleeping = false;
+bool isSantaSleeping = true;
 
-volatile int elves = 0, raindeer = 0;
+volatile int elves = 0, raindeer = 0, elvesCreated=0;
 
 volatile bool santaDeparted = false;
 
@@ -30,7 +30,7 @@ map<string, int> getSystemStatus(){
   
    m["isSantaSleeping"] = isSantaSleeping;
     m["elvesWaiting"] = elves;
-  m["elvesOnQueue"] = MAX_ELVES - elves;
+  m["elvesOnQueue"] = elvesCreated - elves;
    m["raindeers"] = raindeer;
  
  m["santaDeparted"] = santaDeparted;
@@ -139,7 +139,6 @@ void drawSystem(){
 	for(int i=0; i < canvas.size(); ++i)
 		cout << canvas[i] << endl;
 	
-	sleep(1);
 }
 
 
@@ -160,21 +159,23 @@ void helpElves(){
 void santa_t (){
 	while(!santaDeparted){
 		sem_wait (&santaSem);
+		 drawSystem();		/*DRAW CALL !!!!!!!!!*/
+		sleep(1);
 		pthread_mutex_lock(&contLock);
 		if (raindeer == MAX_RAINDEER){
 			int i;
 			prepareSleigh();
 			for (i = 0; i < MAX_RAINDEER; i++)
 				sem_post(&raindeerSem);
+			
+
 		}
 		else if (elves == MAX_SIMULTANEOUS_ELVES){
 			helpElves();
 		}
 		
-		drawSystem();
 		pthread_mutex_unlock(&contLock);
 
-		sleep(1);
 	}
 }
 
@@ -185,81 +186,61 @@ void getHitched(int id){
 
 void raindeer_t (int id){
 	
-	sleep(rand()%6);
+	sleep(rand()%10);
 	
 	pthread_mutex_lock(&contLock);
 
 	raindeer++;
-// 	printf("Chegou a rena %d\n", raindeer);
-
+	 drawSystem();		/*DRAW CALL !!!!!!!!!*/
+	 sleep(1);
 
 	if (raindeer == MAX_RAINDEER)
 		sem_post (&santaSem);
-	
-	
-	drawSystem();
+
 	pthread_mutex_unlock(&contLock);
 
-	   sleep(1);
-	
-	
 	sem_wait(&raindeerSem);
 	getHitched(id);	
 }
 
 void getHelp(int id){
   pthread_mutex_lock(&coutTex);
-//   cout << "elfo: " << id << " esta sendo ajudado" << endl;
     pthread_mutex_unlock(&coutTex);
   this_thread::sleep_for(  chrono::milliseconds( 1000 ) );
 }
 
 void elf_t (int id){
+	sleep(rand()%6);
+	pthread_mutex_lock(&contLock);
+	++elvesCreated;
+	drawSystem();
+	sleep(1);
+	  pthread_mutex_unlock(&contLock);
+
 	while(true){
-
-// 	  cout << "ELFO " << id << " NO AGUARDO!" << endl;
-
+		
 	  pthread_mutex_lock(&elfTex);
-
 	  pthread_mutex_lock(&contLock);
 	  elves++;
-
-
+	  drawSystem();		/*DRAW CALL !!!!!!!!!*/
 	  if (elves == MAX_SIMULTANEOUS_ELVES)
 		  sem_post(&santaSem);
 	  else{
-
 		  pthread_mutex_unlock(&elfTex);
 	  }
-	  
 	  pthread_mutex_unlock(&contLock);
-	  
-	  
-	  drawSystem();
-	  
-	  
 
-	   sleep(1);
-	   
 	   
 	  getHelp(id);
-// 	  cout << "elves: " << elves << endl;
-
 
 	  pthread_mutex_lock(&contLock);
 	  elves--;
+	  drawSystem();		/*DRAW CALL !!!!!!!!!*/
+	  sleep(1);
 	  if (elves == 0)
 		  pthread_mutex_unlock(&elfTex);
-	  
-	  
-	  
 	  pthread_mutex_unlock(&contLock);
-
-	 drawSystem();
-
-	  
-
-	  sleep(1);
+	sleep(rand()%4);
 
 	}
 }
