@@ -142,8 +142,6 @@ void drawSystem(){
 }
 
 
-
-
 void prepareSleigh(){
 // 	printf("Todas as renas chegaram! Papai vai acorda-las\n");
 	santaDeparted = true;
@@ -159,8 +157,8 @@ void helpElves(){
 void santa_t (){
 	while(!santaDeparted){
 		sem_wait (&santaSem);
-		isSantaSleeping = false;
 		pthread_mutex_lock(&contLock);
+		isSantaSleeping = false;
 		 drawSystem();		/*DRAW CALL !!!!!!!!!*/
 		sleep(1);
 		if (raindeer == MAX_RAINDEER){
@@ -169,10 +167,13 @@ void santa_t (){
 			for (i = 0; i < MAX_RAINDEER; i++)
 				sem_post(&raindeerSem);
 			
+// 			sleep(1);
+// 			exit(0);
 
 		}
 		else if (elves == MAX_SIMULTANEOUS_ELVES){
 			helpElves();
+
 		}
 		
 		
@@ -207,9 +208,7 @@ void raindeer_t (int id){
 }
 
 void getHelp(int id){
-  pthread_mutex_lock(&coutTex);
-    pthread_mutex_unlock(&coutTex);
-  this_thread::sleep_for(  chrono::milliseconds( 1000 ) );
+  this_thread::sleep_for(  chrono::milliseconds( 2000 ) );
 }
 
 void elf_t (int id){
