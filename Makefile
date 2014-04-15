@@ -1,5 +1,5 @@
 CC = c++
-CFLAGS = -g -std=c++11 -pthread
+CXXFLAGS = -g -std=c++11 -pthread
 
 PROGRAMS = santa
 
