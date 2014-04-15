@@ -4,7 +4,7 @@ Pela especificação do problema, o Papai Noel está dormindo e só deve ser aco
 
 1 - quando um número X de elfos precisa de sua ajuda;
 
-2 - quando todas as suas Y renas chegaram de férias e ele deve partir entregar presentes.
+2 - quando todas as suas Y renas chegaram de férias e ele deve partir para entregar presentes.
 
 
 Nossa animação para o problema acima está presente no arquivo santa.c. Ao executar o programa, pode-se observar na tela:
@@ -18,10 +18,13 @@ Papai acorda e os ajuda; em seguida, esses elfos vão se retirando até o últim
 os próximos da fila podem entrar.
 
 Abaixo, uma representação do trenó e das renas que vão chegando de viagem. Quando esse número chega a Y,
-Papai acorda, as amarra, e parte em viagem. A execução do programa então se encerra.
+Noel acorda, as amarra, e parte em viagem. A execução do programa então se encerra.
 
 
 CONSTANTES
+
 O número de elfos que Noel ajuda de cada vez pode ser alterado na constante MAX_SIMULTANEOUS_ELVES.
+
 O número total de elfos no Pólo Norte fica em MAX_ELVES.
+
 O número de renas necessárias para puxar o trenó pode ser alterado em MAX_RAINDEER.
