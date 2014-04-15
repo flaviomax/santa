@@ -5,5 +5,5 @@ PROGRAMS = santa
 
 all: $(PROGRAMS)
 
-clean:
+clean: 
 	rm -f *.o *~ $(PROGRAMS)
