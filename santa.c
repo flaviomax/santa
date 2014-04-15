@@ -10,7 +10,7 @@
 #include <map>
 #include <sstream>
 using namespace std;
-const int MAX_RAINDEER = 12;
+const int MAX_RAINDEER = 9;
 const int MAX_SIMULTANEOUS_ELVES = 3 ; /* Max number of elves that can get help simultaneously */
 const int MAX_ELVES = 10;  /* Max number of elves that can get help simultaneously */
 bool isSantaSleeping = true;
