@@ -19,7 +19,7 @@ volatile int elves = 0, raindeer = 0, elvesCreated=0;
 
 volatile bool santaDeparted = false;
 
-sem_t santaSem, raindeerSem;
+sem_t santaSem, raindeerSem, semHelp;
 
 pthread_mutex_t elfTex = PTHREAD_MUTEX_INITIALIZER, contLock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t coutTex = PTHREAD_MUTEX_INITIALIZER;
@@ -156,11 +156,9 @@ void prepareSleigh(){
 }
 
 
-sem_t semTest;
-
 void getHelp(int id){
 	
-	sem_wait(&semTest);
+	sem_wait(&semHelp);
 	
 }
 
@@ -168,7 +166,7 @@ void getHelp(int id){
 void helpElves(){
 
 	for(int i=0; i <MAX_SIMULTANEOUS_ELVES; ++i)
-		sem_post(&semTest);
+		sem_post(&semHelp);
 	
 	sleep(1);
 	
@@ -279,7 +277,7 @@ int main(){
 	
 	sem_init(&raindeerSem, 0 ,0);
 	sem_init(&santaSem, 0, 0);
-	sem_init(&semTest, 0, 0);
+	sem_init(&semHelp, 0, 0);
 
 	vector<thread*> threadsVector;
 
