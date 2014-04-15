@@ -10,8 +10,8 @@
 #include <map>
 #include <sstream>
 using namespace std;
-const int MAX_RAINDEER = 9;
-const int MAX_SIMULTANEOUS_ELVES = 3; /* Max number of elves that can get help simultaneously */
+const int MAX_RAINDEER = 12;
+const int MAX_SIMULTANEOUS_ELVES = 3 ; /* Max number of elves that can get help simultaneously */
 const int MAX_ELVES = 10;  /* Max number of elves that can get help simultaneously */
 bool isSantaSleeping = true;
 
@@ -20,6 +20,7 @@ volatile int elves = 0, raindeer = 0, elvesCreated=0;
 volatile bool santaDeparted = false;
 
 sem_t santaSem, raindeerSem;
+
 pthread_mutex_t elfTex = PTHREAD_MUTEX_INITIALIZER, contLock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t coutTex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -146,15 +147,33 @@ void drawSystem(){
 }
 
 
+
+
 void prepareSleigh(){
 // 	printf("Todas as renas chegaram! Papai vai acorda-las\n");
 	santaDeparted = true;
 	this_thread::sleep_for(  chrono::milliseconds( 500 ) );
 }
 
+
+sem_t semTest;
+
+void getHelp(int id){
+	
+	sem_wait(&semTest);
+	
+}
+
+
 void helpElves(){
-// 	printf("Vou ajudar meus elfos!\n\n\n\n");
-	this_thread::sleep_for(  chrono::milliseconds( 1000 ) );
+
+	for(int i=0; i <MAX_SIMULTANEOUS_ELVES; ++i)
+		sem_post(&semTest);
+	
+	sleep(1);
+	
+	
+
 }
 
 
@@ -177,7 +196,7 @@ void santa_t (){
 // 			exit(0);
 
 		}
-		else if (elves == MAX_SIMULTANEOUS_ELVES){
+		else if (elves >= MAX_SIMULTANEOUS_ELVES){
 			helpElves();
 
 		}
@@ -198,7 +217,7 @@ void getHitched(int id){
 
 void raindeer_t (int id){
 	
-	sleep(rand()%10);
+	sleep(rand()%20 + 15);
 	
 	pthread_mutex_lock(&contLock);
 
@@ -214,12 +233,10 @@ void raindeer_t (int id){
 	getHitched(id);	
 }
 
-void getHelp(int id){
-  this_thread::sleep_for(  chrono::milliseconds( 1000 ) );
-}
+
 
 void elf_t (int id){
-	sleep(rand()%6);
+	sleep(rand()%3);
 	pthread_mutex_lock(&contLock);
 	++elvesCreated;
 	drawSystem();
@@ -252,6 +269,8 @@ void elf_t (int id){
 	}
 }
 
+
+
 int main(){
 	
 	system("resize -s 50 130");
@@ -260,6 +279,7 @@ int main(){
 	
 	sem_init(&raindeerSem, 0 ,0);
 	sem_init(&santaSem, 0, 0);
+	sem_init(&semTest, 0, 0);
 
 	vector<thread*> threadsVector;
 
