@@ -2,7 +2,8 @@ O problema do Papai Noel
 
 Pela especificação do problema, o Papai Noel está dormindo e só deve ser acordado em dois casos:
 
-1 - quando um número X de elfos precisa de sua ajuda;\n
+1 - quando um número X de elfos precisa de sua ajuda;
+
 2 - quando todas as suas Y renas chegaram de férias e ele deve partir entregar presentes.
 
 
